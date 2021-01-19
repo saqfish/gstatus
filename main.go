@@ -1,30 +1,20 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"net"
 	"os"
-	"runtime"
 	"strings"
 	"time"
 )
 
-const (
-	red    int = 1
-	yellow int = 2
-	green  int = 3
-)
-
 var runs int = 0
+var chans [10]chan string
 var lst string
-
-var ch3 chan string = make(chan string)
-var ch4 chan string = make(chan string)
 
 func send(s string) {
 	fmt.Printf("Sending %s\n", s)
-	c, err := net.Dial("unix", "/tmp/gsock.sock")
+	c, err := net.Dial("unix", gsock)
 	defer c.Close()
 	if err != nil {
 		fmt.Println("socket error")
@@ -56,28 +46,10 @@ func setroot(c ...string) {
 	}
 }
 
-func stats() {
-	var mem runtime.MemStats
-	runtime.ReadMemStats(&mem)
-	fmt.Printf("alloc [%v] \t heapAlloc [%v] \n", mem.Alloc, mem.HeapAlloc)
-	fmt.Println("Routines: ", runtime.NumGoroutine())
-}
-
-const sock = "/tmp/gstatus.sock"
-
-func getBannerstr(c net.Conn) {
-	fmt.Printf("Client connected [%s]\n", c.RemoteAddr().Network())
-	defer c.Close()
-	cd := bufio.NewReaderSize(c, 24)
-	line, _, err := cd.ReadLine()
-	if err == nil {
-		fmt.Printf("Client sent %s\n", line)
-		s := string(line)
-		ch3 <- s
-	}
-}
-
 func init() {
+	for i := range chans {
+		chans[i] = make(chan string)
+	}
 	if err := os.RemoveAll(sock); err != nil {
 		os.Exit(1)
 	}
@@ -94,26 +66,24 @@ func init() {
 	}()
 }
 
-func banner(s string) {
-	go str(2, 1, ch3)
-	ch3 <- s
-}
-
-func main() {
-	m, d := "10?", "10?"
-	banner("first")
-	go date(60*1000, 1, ch4)
-
+func run(b ...string) {
 	for {
 		select {
-		case z := <-ch3:
-			m = z
-		case z := <-ch4:
-			d = z
+		case z := <-chans[bannerPos]:
+			b[bannerPos] = z
+		case z := <-chans[datePos]:
+			b[datePos] = z
 		case <-time.After(time.Second):
 			break
 		}
-		setroot(d, m)
+		setroot(b...)
 
 	}
+}
+
+func main() {
+	bannerCell, dateCell := "00?", "00?"
+	go str(2, 1, chans[bannerPos])
+	go date(60*1000, 1, chans[datePos])
+	run(bannerCell, dateCell)
 }

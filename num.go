@@ -1,14 +1,7 @@
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "fmt"
 
-func num(d int, c int, i *int, s *string) {
-	if runs > 1 {
-		time.Sleep(time.Duration(d) * time.Millisecond)
-	}
-	*i = *i + 1
-	*s = fmt.Sprintf("%d%d", c, *i)
+func num(c int, i int, inv int, s chan string) {
+	s <- fmt.Sprintf("%d%d%d", c, inv, i)
 }

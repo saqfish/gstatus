@@ -8,41 +8,50 @@ import (
 	"time"
 )
 
-var runs int = 0
-var chans [10]chan string
+var runs, tries int
+var chans [4]chan string
 var lst string
 
-func send(s string) {
-	fmt.Printf("Sending %s\n", s)
+func send(s string) bool {
 	c, err := net.Dial("unix", gsock)
-	defer c.Close()
 	if err != nil {
 		fmt.Println("socket error")
-		os.Exit(1)
-
+		return false
 	} else {
 		_, werr := c.Write([]byte(s))
 		if werr != nil {
 			fmt.Println("socket write error")
-			os.Exit(1)
+			return false
 		}
 	}
+	c.Close()
+	return true
 }
 
 func setroot(c ...string) {
 	s := strings.Join(c, ",")
+	var sent bool
 	if c == nil {
-		fmt.Println(s)
-		send(lst)
+		sent = send(lst)
 	} else {
-
 		if s != lst {
-			fmt.Println(s)
-			send(s)
+			sent = send(s)
 			runs++
 			stats()
+		} else {
+			sent = true
 		}
 		lst = s
+	}
+
+	// make 10 attempts to send before quiting
+	if !sent {
+		if tries == 10 {
+			os.Exit(1)
+		}
+		tries++
+		fmt.Println("tries: ", tries)
+		time.Sleep(1000)
 	}
 }
 

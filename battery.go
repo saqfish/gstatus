@@ -10,7 +10,7 @@ import (
 
 const label = "BAT"
 
-func battery(d int, p string, inv int, s chan string) {
+func battery(d float64, p string, inv int, s chan string) {
 	for {
 		f, ferr := os.Open(p)
 		if ferr != nil {
@@ -32,7 +32,7 @@ func battery(d int, p string, inv int, s chan string) {
 		s <- fmt.Sprintf("%d%d%s %s%%", clr, inv, label, line)
 		f.Close()
 		if runs > 0 {
-			time.Sleep(time.Duration(d) * time.Millisecond)
+			time.Sleep(time.Duration(d) * time.Second)
 		}
 	}
 }

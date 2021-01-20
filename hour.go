@@ -5,14 +5,14 @@ import (
 	"time"
 )
 
-func hour(d int, inv int, s chan string) {
+func hour(d float64, inv int, s chan string) {
 	for {
 		_, m, _ := time.Now().Clock()
 		rem := 60 - m
 		clr := clrhr(rem)
 		s <- fmt.Sprintf("%d%d%d", clr, inv, rem)
 		if runs > 0 {
-			time.Sleep(time.Duration(d) * time.Millisecond)
+			time.Sleep(time.Duration(d) * time.Second)
 		}
 	}
 }

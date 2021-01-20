@@ -34,7 +34,7 @@ func setroot(c ...string) {
 	if c == nil {
 		sent = send(lst)
 	} else {
-		if s != lst {
+		if s != lst || tries < len(chans) {
 			sent = send(s)
 			runs++
 			stats()
@@ -46,7 +46,7 @@ func setroot(c ...string) {
 
 	// make 10 attempts to send before quiting
 	if !sent {
-		if tries == 10 {
+		if tries == len(chans) {
 			os.Exit(1)
 		}
 		tries++

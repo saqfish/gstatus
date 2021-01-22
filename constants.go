@@ -7,7 +7,8 @@ const (
 	datePos    = 0
 	batteryPos = 1
 	hourPos    = 2
-	bannerPos  = 3
+	cpuPos     = 3
+	bannerPos  = 4
 
 	red    int = 1
 	yellow int = 2

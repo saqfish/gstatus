@@ -6,9 +6,10 @@ const gsock = "/tmp/gsock.sock"
 const (
 	datePos    = 0
 	batteryPos = 1
-	hourPos    = 2
+	ramPos     = 2
 	cpuPos     = 3
-	bannerPos  = 4
+	hourPos    = 4
+	bannerPos  = 5
 
 	red    int = 1
 	yellow int = 2

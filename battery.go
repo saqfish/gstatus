@@ -8,8 +8,6 @@ import (
 	"time"
 )
 
-const label = "BAT"
-
 func battery(d float64, p string, inv int, s chan string) {
 	for {
 		f, ferr := os.Open(p)
@@ -28,8 +26,7 @@ func battery(d float64, p string, inv int, s chan string) {
 			s <- fmt.Sprintf("%d%d!!", red, inv)
 			break
 		}
-		clr := clrbttry(int(v))
-		s <- fmt.Sprintf("%d%d%s %s%%", clr, inv, label, line)
+		s <- fmt.Sprintf("%d%d%s%%", clrbttry(int(v)), inv, line)
 		f.Close()
 		if runs > 0 {
 			time.Sleep(time.Duration(d) * time.Second)

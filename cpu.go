@@ -7,25 +7,16 @@ import (
 	"time"
 )
 
-func pstat(i int, o int, t int) {
-	fmt.Println("idle: ", i)
-	fmt.Println("other: ", o)
-	fmt.Println("total: ", t)
-	fmt.Println("---------")
-}
-
-func cpu_perc(d float64, inv int, s chan string) {
-	var pi, po, pt int
-	var i, o, t int
+func cpuperc(d float64, inv int, s chan string) {
+	var po, pt int
+	var o, t int
 	for {
-		pi, po, pt = stat()
-		pstat(pi, po, pt)
+		_, po, pt = stat()
 		if runs > 0 {
 			time.Sleep(time.Duration(d) * time.Second)
 		}
 
-		i, o, t = stat()
-		pstat(i, o, t)
+		_, o, t = stat()
 
 		if pt == 0 {
 			s <- fmt.Sprintf("%d%d0%%", green, inv)
@@ -39,7 +30,7 @@ func cpu_perc(d float64, inv int, s chan string) {
 
 		perc := 100 * (o - po) / (t - pt)
 
-		s <- fmt.Sprintf("%d%d%d%%", green, inv, perc)
+		s <- fmt.Sprintf("%d%d%d%%", clrcpu(perc), inv, perc)
 	}
 }
 
@@ -60,7 +51,7 @@ func stat() (int, int, int) {
 	var cpu string
 	fp, ferr := os.Open("/proc/stat")
 	if ferr != nil {
-		fmt.Println("file error")
+		return 0, 0, 0
 	}
 	r := bufio.NewReader(fp)
 	var vars [10]int
@@ -75,4 +66,17 @@ func stat() (int, int, int) {
 	total := idle + other
 
 	return idle, other, total
+}
+
+func clrcpu(i int) int {
+	var clr int
+	switch {
+	case i <= 100 && i > 80:
+		clr = red
+	case i <= 60 && i > 50:
+		clr = yellow
+	case i <= 40:
+		clr = green
+	}
+	return clr
 }

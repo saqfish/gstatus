@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func cpuperc(d float64, inv int, s chan string) {
+func cpuperc(d float64, bg string, s chan string) {
 	var po, pt int
 	var o, t int
 	for {
@@ -19,18 +19,20 @@ func cpuperc(d float64, inv int, s chan string) {
 		_, o, t = stat()
 
 		if pt == 0 {
-			s <- fmt.Sprintf("%d%d0%%", green, inv)
+			ce := fmt.Sprintf("0%%")
+			s <- mkline(green, bg, ce)
 			continue
 		}
 
 		if pt == t {
-			s <- fmt.Sprintf("%d%d0%%", green, inv)
+			ce := fmt.Sprintf("0%%")
+			s <- mkline(green, bg, ce)
 			continue
 		}
 
 		perc := 100 * (o - po) / (t - pt)
-
-		s <- fmt.Sprintf("%d%d%d%%", clrcpu(perc), inv, perc)
+		cperc := fmt.Sprintf("%d%%", perc)
+		s <- mkline(clrcpu(perc), bg, cperc)
 	}
 }
 
@@ -68,8 +70,8 @@ func stat() (int, int, int) {
 	return idle, other, total
 }
 
-func clrcpu(i int) int {
-	var clr int
+func clrcpu(i int) string {
+	var clr string
 	switch {
 	case i <= 100 && i > 80:
 		clr = red

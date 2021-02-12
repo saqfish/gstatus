@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func ramperc(d float64, inv int, s chan string) {
+func ramperc(d float64, bg string, s chan string) {
 	for {
 		total, free, buffers, cached := memstat()
 
@@ -18,7 +18,8 @@ func ramperc(d float64, inv int, s chan string) {
 
 		perc := cal / total
 
-		s <- fmt.Sprintf("%d%d%d%%", clrram(perc), inv, perc)
+		cperc := fmt.Sprintf("%d%%", perc)
+		s <- mkline(clrram(perc), bg, cperc)
 		if runs > 0 {
 			time.Sleep(time.Duration(d) * time.Second)
 		}
@@ -47,8 +48,8 @@ func memstat() (int, int, int, int) {
 	return total, free, buffers, cached
 }
 
-func clrram(i int) int {
-	var clr int
+func clrram(i int) string {
+	var clr string
 	switch {
 	case i <= 100 && i > 60:
 		clr = red

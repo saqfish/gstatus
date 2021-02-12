@@ -8,25 +8,26 @@ import (
 	"time"
 )
 
-func battery(d float64, p string, inv int, s chan string) {
+func battery(d float64, p string, bg string, s chan string) {
 	for {
 		f, ferr := os.Open(p)
 		if ferr != nil {
-			s <- fmt.Sprintf("%d%d!!", red, inv)
+			s <- mkline(red, bg, "!!")
 			break
 		}
 		r := bufio.NewReaderSize(f, 1024)
 		line, _, lerr := r.ReadLine()
 		if lerr != nil {
-			s <- fmt.Sprintf("%d%d!!", red, inv)
+			s <- mkline(red, bg, "!!")
 			break
 		}
 		v, perr := strconv.ParseInt(string(line), 10, 64)
 		if perr != nil {
-			s <- fmt.Sprintf("%d%d!!", red, inv)
+			s <- mkline(red, bg, "!!")
 			break
 		}
-		s <- fmt.Sprintf("%d%d%s%%", clrbttry(int(v)), inv, line)
+		cline := fmt.Sprintf("%s%%", line)
+		s <- mkline(clrbttry(int(v)), bg, cline)
 		f.Close()
 		if runs > 0 {
 			time.Sleep(time.Duration(d) * time.Second)
@@ -34,8 +35,8 @@ func battery(d float64, p string, inv int, s chan string) {
 	}
 }
 
-func clrbttry(i int) int {
-	var clr int
+func clrbttry(i int) string {
+	var clr string
 	switch {
 	case i <= 20:
 		clr = red

@@ -36,14 +36,12 @@ func battery(d float64, p string, bg string, s chan string) {
 }
 
 func clrbttry(i int) string {
-	var clr string
 	switch {
-	case i <= 20:
-		clr = red
-	case i <= 60 && i > 20:
-		clr = yellow
-	case i <= 100 && i > 60:
-		clr = green
+	case i > 60:
+		return green
+	case i > 20:
+		return yellow
+	default:
+		return red
 	}
-	return clr
 }

@@ -19,14 +19,12 @@ func hour(d float64, bg string, s chan string) {
 }
 
 func clrhr(i int) string {
-	var clr string
 	switch {
-	case i <= 20:
-		clr = red
-	case i <= 40 && i > 20:
-		clr = yellow
-	case i <= 60 && i > 40:
-		clr = green
+	case i > 40:
+		return green
+	case i > 20:
+		return yellow
+	default:
+		return red
 	}
-	return clr
 }

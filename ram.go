@@ -49,14 +49,12 @@ func memstat() (int, int, int, int) {
 }
 
 func clrram(i int) string {
-	var clr string
 	switch {
-	case i <= 100 && i > 60:
-		clr = red
-	case i <= 60 && i > 40:
-		clr = yellow
-	case i <= 40:
-		clr = green
+	case i > 60:
+		return red
+	case i > 40:
+		return yellow
+	default:
+		return green
 	}
-	return clr
 }

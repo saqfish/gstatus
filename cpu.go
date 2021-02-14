@@ -7,6 +7,19 @@ import (
 	"time"
 )
 
+const (
+	user       int = 0
+	nice       int = 1
+	system     int = 2
+	idle       int = 3
+	iowait     int = 4
+	irq        int = 5
+	softirq    int = 6
+	steal      int = 7
+	guest      int = 8
+	guest_nice int = 9
+)
+
 func cpuperc(d float64, bg string, s chan string) {
 	var po, pt int
 	var o, t int
@@ -36,19 +49,6 @@ func cpuperc(d float64, bg string, s chan string) {
 	}
 }
 
-const (
-	user       int = 0
-	nice       int = 1
-	system     int = 2
-	idle       int = 3
-	iowait     int = 4
-	irq        int = 5
-	softirq    int = 6
-	steal      int = 7
-	guest      int = 8
-	guest_nice int = 9
-)
-
 func stat() (int, int, int) {
 	var cpu string
 	fp, ferr := os.Open("/proc/stat")
@@ -71,14 +71,12 @@ func stat() (int, int, int) {
 }
 
 func clrcpu(i int) string {
-	var clr string
 	switch {
-	case i <= 100 && i > 80:
-		clr = red
-	case i <= 60 && i > 50:
-		clr = yellow
-	case i <= 40:
-		clr = green
+	case i > 80:
+		return red
+	case i > 50:
+		return yellow
+	default:
+		return green
 	}
-	return clr
 }

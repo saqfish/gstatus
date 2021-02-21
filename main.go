@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net"
 	"os"
@@ -76,13 +77,19 @@ func mkuline(bs string, c string, v string) string {
 func main() {
 	var bannerCell, hourCell, cpuCell, ramCell, dateCell, batteryCell string
 
-	bg := "#0a1016"
+	bgflg := flag.String("bg", "#000000", "Background color")
+	fgflg := flag.String("fg", "#FFFFFF", "Foreground color")
+	flag.Parse()
+
+	bg := *bgflg
+	fg := *fgflg
+
 	go date(60, bg, chans[datePos])
 	go battery(10, "/sys/class/power_supply/BAT0/capacity", bg, chans[batteryPos])
 	go ramperc(4, bg, chans[ramPos])
 	go cpuperc(4, bg, chans[cpuPos])
 	go hour(30, bg, chans[hourPos])
-	go str(green, bg, chans[bannerPos])
+	go str(fg, bg, chans[bannerPos])
 
 	run(bannerCell, hourCell, cpuCell, ramCell, dateCell, batteryCell)
 }

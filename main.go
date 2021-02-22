@@ -9,10 +9,10 @@ import (
 
 var runs int
 var chans [6]chan string
+var reset string = "%{-u}%{F-}%{B-}%{O6}"
 
 func line(c ...string) {
 	var s, b string
-	reset := " %{-u}%{F-}%{B-} "
 	for n, l := range c {
 		if n == 0 {
 			b = l
@@ -67,6 +67,10 @@ func run(b ...string) {
 
 func mkline(fg string, bg string, v string) string {
 	s := fmt.Sprintf("%%{F%s}%%{B%s}%s", fg, bg, v)
+	return s
+}
+func mklblline(l string, fg string, bg string, v string) string {
+	s := fmt.Sprintf("%s%s%s", l, reset, mkline(fg, bg, v))
 	return s
 }
 func mkuline(bs string, c string, v string) string {

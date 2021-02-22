@@ -45,7 +45,7 @@ func cpuperc(d float64, bg string, s chan string) {
 
 		perc := 100 * (o - po) / (t - pt)
 		cperc := fmt.Sprintf("%d%%", perc)
-		s <- mkline(clrcpu(perc), bg, cperc)
+		s <- mklblline("CPU", clrcpu(perc), bg, cperc)
 	}
 }
 

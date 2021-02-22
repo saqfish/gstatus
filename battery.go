@@ -12,22 +12,22 @@ func battery(d float64, p string, bg string, s chan string) {
 	for {
 		f, ferr := os.Open(p)
 		if ferr != nil {
-			s <- mkline(red, bg, "!!")
+			s <- mklblline("BAT", red, bg, "!!")
 			break
 		}
 		r := bufio.NewReaderSize(f, 1024)
 		line, _, lerr := r.ReadLine()
 		if lerr != nil {
-			s <- mkline(red, bg, "!!")
+			s <- mklblline("BAT", red, bg, "!!")
 			break
 		}
 		v, perr := strconv.ParseInt(string(line), 10, 64)
 		if perr != nil {
-			s <- mkline(red, bg, "!!")
+			s <- mklblline("BAT", red, bg, "!!")
 			break
 		}
 		cline := fmt.Sprintf("%s%%", line)
-		s <- mkline(clrbttry(int(v)), bg, cline)
+		s <- mklblline("BAT", clrbttry(int(v)), bg, cline)
 		f.Close()
 		if runs > 0 {
 			time.Sleep(time.Duration(d) * time.Second)

@@ -19,7 +19,7 @@ func ramperc(d float64, bg string, s chan string) {
 		perc := cal / total
 
 		cperc := fmt.Sprintf("%d%%", perc)
-		s <- mkline(clrram(perc), bg, cperc)
+		s <- mklblline("RAM", clrram(perc), bg, cperc)
 		if runs > 0 {
 			time.Sleep(time.Duration(d) * time.Second)
 		}

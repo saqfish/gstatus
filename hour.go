@@ -10,7 +10,7 @@ func hour(d float64, bg string, s chan string) {
 		_, m, _ := time.Now().Clock()
 		rem := 60 - m
 		clr := clrhr(rem)
-		crem := fmt.Sprintf("%d", rem)
+		crem := fmt.Sprintf("%dm", rem)
 		s <- mkline(clr, bg, crem)
 		if runs > 0 {
 			time.Sleep(time.Duration(d) * time.Second)

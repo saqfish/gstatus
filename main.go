@@ -2,28 +2,14 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"net"
 	"os"
 )
 
-var runs int
 var chans [6]chan string
-var reset string = "%{-u}%{F-}%{B-}%{O6}"
 
-func line(c ...string) {
-	var s, b string
-	for n, l := range c {
-		if n == 0 {
-			b = l
-		} else {
-			s = fmt.Sprintf("%s%s%s", s, l, reset)
-		}
-	}
-	ls := fmt.Sprintf("%s%%{r}%s", b, s)
-	fmt.Println(ls)
-	runs++
-}
+const sock = "/tmp/gstatus.sock"
+const gsock = "/tmp/gsock.sock"
 
 func init() {
 	for i := range chans {
@@ -61,19 +47,6 @@ func run(b ...string) {
 		}
 		line(b...)
 	}
-}
-
-func mkline(fg string, bg string, v string) string {
-	s := fmt.Sprintf("%%{F%s}%%{B%s}%s", fg, bg, v)
-	return s
-}
-func mklblline(l string, fg string, bg string, v string) string {
-	s := fmt.Sprintf("%s%s%s", l, reset, mkline(fg, bg, v))
-	return s
-}
-func mkuline(bs string, c string, v string) string {
-	s := fmt.Sprintf("%%{U%s}%%{+u}%s", c, v)
-	return s
 }
 
 func main() {

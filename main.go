@@ -50,8 +50,6 @@ func run(b ...string) {
 		select {
 		case z := <-chans[bannerPos]:
 			b[bannerPos] = z
-		case z := <-chans[hourPos]:
-			b[hourPos] = z
 		case z := <-chans[cpuPos]:
 			b[cpuPos] = z
 		case z := <-chans[ramPos]:
@@ -92,7 +90,6 @@ func main() {
 	go battery(10, "/sys/class/power_supply/BAT0/capacity", bg, chans[batteryPos])
 	go ramperc(4, bg, chans[ramPos])
 	go cpuperc(4, bg, chans[cpuPos])
-	go hour(30, bg, chans[hourPos])
 	go str(fg, bg, chans[bannerPos])
 
 	run(bannerCell, hourCell, cpuCell, ramCell, dateCell, batteryCell)

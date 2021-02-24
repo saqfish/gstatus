@@ -4,11 +4,10 @@ const sock = "/tmp/gstatus.sock"
 const gsock = "/tmp/gsock.sock"
 
 const (
-	datePos    = 5
-	batteryPos = 4
-	ramPos     = 3
-	cpuPos     = 2
-	hourPos    = 1
+	datePos    = 4
+	batteryPos = 3
+	ramPos     = 2
+	cpuPos     = 1
 	bannerPos  = 0
 
 	white  string = "#FFFFFF"

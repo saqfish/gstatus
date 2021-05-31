@@ -36,6 +36,8 @@ func run(b ...string) {
 		select {
 		case z := <-chans[bannerPos]:
 			b[bannerPos] = z
+		case z := <-chans[shortsPos]:
+			b[shortsPos] = z
 		case z := <-chans[cpuPos]:
 			b[cpuPos] = z
 		case z := <-chans[ramPos]:
@@ -50,7 +52,7 @@ func run(b ...string) {
 }
 
 func main() {
-	var bannerCell, hourCell, cpuCell, ramCell, dateCell, batteryCell string
+	var shortsCell, bannerCell, hourCell, cpuCell, ramCell, dateCell, batteryCell string
 
 	bgflg := flag.String("bg", "#000000", "Background color")
 	fgflg := flag.String("fg", "#FFFFFF", "Foreground color")
@@ -64,6 +66,7 @@ func main() {
 	go ramperc(4, bg, chans[ramPos])
 	go cpuperc(4, bg, chans[cpuPos])
 	go str(fg, bg, chans[bannerPos])
+	go shorts(bg, chans[shortsPos])
 
-	run(bannerCell, hourCell, cpuCell, ramCell, dateCell, batteryCell)
+	run(shortsCell, bannerCell, hourCell, cpuCell, ramCell, dateCell, batteryCell)
 }

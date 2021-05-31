@@ -4,9 +4,10 @@ import "fmt"
 
 var runs int
 
-const reset string = "%{-u}%{F-}%{B-}%{O6}"
+const reset string = "%{T-}%{-u}%{F-}%{B-}%{O6}"
 
 const (
+	shortsPos  = 5
 	datePos    = 4
 	batteryPos = 3
 	ramPos     = 2
@@ -37,11 +38,16 @@ func mkline(fg string, bg string, v string) string {
 	s := fmt.Sprintf("%%{F%s}%%{B%s}%s", fg, bg, v)
 	return s
 }
+func mkbttn(c Command) string {
+	lbl := fmt.Sprintf("%%{O6}%%{A1:%s:}%%{T2}%s%%{A}", c.cmd, c.lbl)
+	s := mkline(c.fg, c.bg, lbl)
+	return s
+}
 func mklblline(l string, fg string, bg string, v string) string {
 	s := fmt.Sprintf("%s%s%s", l, reset, mkline(fg, bg, v))
 	return s
 }
-func mkuline(bs string, c string, v string) string {
+func mkuline(c string, v string) string {
 	s := fmt.Sprintf("%%{U%s}%%{+u}%s", c, v)
 	return s
 }

@@ -39,7 +39,7 @@ func mkline(fg string, bg string, v string) string {
 	return s
 }
 func mkbttn(c Command) string {
-	lbl := fmt.Sprintf("%%{O6}%%{A1:%s:}%%{T2}%s%%{A}", c.cmd, c.lbl)
+	lbl := fmt.Sprintf("%%{O6}%%{A1:%s &:}%%{T2}%s%%{A}", c.cmd, c.lbl)
 	s := mkline(c.fg, c.bg, lbl)
 	return s
 }
